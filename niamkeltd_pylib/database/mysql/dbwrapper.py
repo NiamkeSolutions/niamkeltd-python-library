@@ -8,7 +8,7 @@ import os, inspect, logging
 from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import errorcode
-from src.niamkeltd_pylib.helpers import debughelper
+from niamkeltd_pylib.helpers import debughelper
 
 load_dotenv(dotenv_path=".env")
 MYSQL_USERNAME: Final = os.getenv("MYSQL_USERNAME")

@@ -1,6 +1,6 @@
 import pytz, calendar, logging
 from datetime import datetime, timedelta, UTC
-from src.niamkeltd_pylib.models.weekday import Weekday
+from niamkeltd_pylib.models.weekday import Weekday
 
 def week_starting(week_number: int, year: int) -> datetime:
     # January 4th is always in week 1

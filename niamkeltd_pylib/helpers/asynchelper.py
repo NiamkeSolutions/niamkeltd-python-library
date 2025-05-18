@@ -1,7 +1,7 @@
 # https://learn.microsoft.com/en-us/azure/azure-functions/functions-scale#timeout
 import asyncio, concurrent.futures, logging
 from . import debughelper
-from src.niamkeltd_pylib.models.exceptions.timeoutexception import TimeoutException
+from niamkeltd_pylib.models.exceptions.timeoutexception import TimeoutException
 
 FILE_NAME = debughelper.get_filename()
 
