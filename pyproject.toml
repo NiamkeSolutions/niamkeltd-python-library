@@ -9,7 +9,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "niamkeltd_pylib"
-version = "1.0.4"
+version = "1.0.8"
 authors = [
   { name="Damaani Webber", email="damaaniwebber@gmail.com" },
 ]

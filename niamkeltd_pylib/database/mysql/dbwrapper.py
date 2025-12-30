@@ -14,9 +14,9 @@ load_dotenv(dotenv_path=".env")
 MYSQL_USERNAME: Final = os.getenv("MYSQL_USERNAME")
 MYSQL_PASSWORD: Final = os.getenv("MYSQL_PASSWORD")
 MYSQL_HOST: Final = os.getenv("MYSQL_HOST")
-MYSQL_PORT: Final = int(os.getenv("MYSQL_PORT"))
+MYSQL_PORT: Final = int(os.getenv("MYSQL_PORT", ""))
 MYSQL_DATABASE: Final = os.getenv("MYSQL_DATABASE")
-MYSQL_TIMEOUT: Final = int(os.getenv("MYSQL_TIMEOUT"))
+MYSQL_TIMEOUT: Final = int(os.getenv("MYSQL_TIMEOUT", ""))
 
 FILE_NAME: Final = debughelper.get_filename()
 
@@ -90,6 +90,7 @@ def insert(query: str, data=()) -> int:
 
     finally:
       cnx.close()
+      return 0
 
   except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -99,8 +100,10 @@ def insert(query: str, data=()) -> int:
       logging.error(f"[{FILE_NAME}] Database does not exist. Error: {err}")
     else:
       logging.error(f"[{FILE_NAME}] Error: {err}")
+    return 0
   except Exception as ex:
     logging.error(ex)
+    return 0
 
 def insert_bulk(query: str, data=()) -> int:
   logging.info(f"[{inspect.stack()[0][3]}] called by [{inspect.stack()[1][3]}]")
@@ -119,13 +122,14 @@ def insert_bulk(query: str, data=()) -> int:
 
         cnx.commit()
 
-        return row_id
+        return row_id if isinstance(row_id, int) else 0
 
     except Exception as ex:
       logging.error(ex)
 
     finally:
       cnx.close()
+      return 0
 
   except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -135,8 +139,10 @@ def insert_bulk(query: str, data=()) -> int:
       logging.error(f"[{FILE_NAME}] Database does not exist. Error: {err}")
     else:
       logging.error(f"[{FILE_NAME}] Error: {err}")
+    return 0
   except Exception as ex:
     logging.error(ex)
+    return 0
 
 def delete(queries: list[str], data=()):
   logging.info(f"[{inspect.stack()[0][3]}] called by [{inspect.stack()[1][3]}]")

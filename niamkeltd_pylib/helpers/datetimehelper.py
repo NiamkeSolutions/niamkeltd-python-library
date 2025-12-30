@@ -1,3 +1,4 @@
+from typing import Optional
 import pytz, calendar, logging
 from datetime import datetime, timedelta, UTC
 from niamkeltd_pylib.models.weekday import Weekday
@@ -39,7 +40,7 @@ def utc_now() -> datetime:
 def now() -> datetime:
     return datetime.now(pytz.timezone('Europe/London'))
 
-def calculate_age(dob: datetime, now: datetime = None) -> int:
+def calculate_age(dob: datetime, now: Optional[datetime] = None) -> int:
     now = datetime.now(UTC) if not now else now
     age = now.year - dob.year - 1 if (now.month, now.day) < (dob.month, dob.day) else now.year - dob.year
     return age

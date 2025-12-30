@@ -1,10 +1,4 @@
 import re
-from niamkeltd_pylib.models.emojis import Emojis
-
-def get_ticks(message: str) -> list[str]:
-    ticks = re.findall(rf"[{Emojis.TICK_GREEN}{Emojis.TICK_GREY}]", message)
-    portion_entries = [ t for t in ticks if t != Emojis.VARIENT_SELECTOR ]
-    return portion_entries
 
 def get_id(message: str) -> int:
     numbers = list(map(int, re.findall(r'\d+', message)))
