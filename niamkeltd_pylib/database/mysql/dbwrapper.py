@@ -31,6 +31,15 @@ def initialise_connection():
       connection_timeout=MYSQL_TIMEOUT)
 
 def select(query: str, data=(), dictionary:bool = False):
+  """
+  Execute a select query against the database.
+
+  :param query: The select query to execute.
+  :param data: The data to use in the query.
+  :param dictionary: Whether to return results as dictionaries.
+  :return: The results of the query.
+  """
+
   logging.info(f"[{inspect.stack()[0][3]}] called by [{inspect.stack()[1][3]}]")
 
   try:
@@ -61,12 +70,21 @@ def select(query: str, data=(), dictionary:bool = False):
   except Exception as ex:
     logging.error(ex)
 
-def update(query: str, data=()) -> int:
+def update(query: str, data=()) -> int | None:
   logging.info(f"[{inspect.stack()[0][3]}] called by [{inspect.stack()[1][3]}]")
   return insert(query, data)
 
-def insert(query: str, data=()) -> int:
+def insert(query: str, data=()) -> int | None:
+  """
+  Insert a record into the database.
+
+  :param query: The insert query to execute.
+  :param data: The data to insert.
+  :return: The ID of the inserted row, or None if the insert failed.
+  """
+
   logging.info(f"[{inspect.stack()[0][3]}] called by [{inspect.stack()[1][3]}]")
+
   try:
     cnx = initialise_connection()
 
@@ -83,14 +101,13 @@ def insert(query: str, data=()) -> int:
 
         logging.info(f"[{FILE_NAME}] Resulting row_id: {row_id}")
 
-        return row_id if isinstance(row_id, int) else 0
+        return row_id
 
     except Exception as ex:
       logging.error(ex)
 
     finally:
       cnx.close()
-      return 0
 
   except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -100,13 +117,21 @@ def insert(query: str, data=()) -> int:
       logging.error(f"[{FILE_NAME}] Database does not exist. Error: {err}")
     else:
       logging.error(f"[{FILE_NAME}] Error: {err}")
-    return 0
+
   except Exception as ex:
     logging.error(ex)
-    return 0
 
-def insert_bulk(query: str, data=()) -> int:
+def insert_bulk(query: str, data=()) -> int | None:
+  """
+  Insert multiple records into the database.
+
+  :param query: The insert query to execute.
+  :param data: The data to insert.
+  :return: The ID of the last inserted row, or None if the insert failed.
+  """
+
   logging.info(f"[{inspect.stack()[0][3]}] called by [{inspect.stack()[1][3]}]")
+
   try:
     cnx = initialise_connection()
 
@@ -122,14 +147,13 @@ def insert_bulk(query: str, data=()) -> int:
 
         cnx.commit()
 
-        return row_id if isinstance(row_id, int) else 0
+        return row_id
 
     except Exception as ex:
       logging.error(ex)
 
     finally:
       cnx.close()
-      return 0
 
   except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -139,12 +163,18 @@ def insert_bulk(query: str, data=()) -> int:
       logging.error(f"[{FILE_NAME}] Database does not exist. Error: {err}")
     else:
       logging.error(f"[{FILE_NAME}] Error: {err}")
-    return 0
+
   except Exception as ex:
     logging.error(ex)
-    return 0
 
 def delete(queries: list[str], data=()):
+  """
+  Execute multiple delete queries against the database.
+
+  :param queries: The delete queries to execute.
+  :param data: The data to use in the queries.
+  """
+
   logging.info(f"[{inspect.stack()[0][3]}] called by [{inspect.stack()[1][3]}]")
   try:
     cnx = initialise_connection()
